@@ -1,0 +1,36 @@
+#static-cms-toolbar {
+  padding: 10px 15px;
+  border-bottom: 2px solid #00CC72;
+  background: #000;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#static-cms-toolbar .name {
+  color: #00CC72;
+}
+
+#static-cms-toolbar .link {
+  color: #00CC72 !important;
+  background-color: #474747 !important;
+  border-radius: 2px !important;
+  display: inline-block !important;
+  padding: 6px !important;
+  text-transform: uppercase !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  margin-left: 10px !important;
+}
+
+#static-cms-toolbar .edit-cancel {
+  float: right !important;
+}
+
+.static-cms-can-edit {
+  box-shadow: 0px 0px 10px #00AA5F;
+}
