@@ -7,11 +7,18 @@ require_once 'auth.php';
  * The entry point of the application.
  */
 function main() {
-  if (!isset($_GET['page'])) {
-    header('Location: ?page=/');
+  if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (!isset($_GET['static_page'])) {
+      header('Location: ?static_page=/');
+    }
+    print get_current_page();
+    print build_static_resources();
+    exit;
   }
-  print get_current_page();
-  print build_static_resources();
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    return save_to_disk($_GET['static_page'], $_POST['content']);
+    exit;
+  }
 }
 
 /**
@@ -23,7 +30,7 @@ function main() {
  *   Replaced HTML.
  */
 function replace_links($html_string) {
-  return str_replace('<a href="', '<a href="?page=', $html_string);
+  return str_replace('<a href="', '<a href="?static_page=', $html_string);
 }
 
 /**
@@ -32,10 +39,10 @@ function replace_links($html_string) {
  * @return string
  */
 function get_current_page() {
-  $page = $_GET['page'];
+  $page = $_GET['static_page'];
   $file = '..' . ($page == '/' ? '/index.html' : $page);
   $content = file_get_contents($file);
-  return $content;
+  return replace_links($content);
 }
 
 /**
@@ -65,7 +72,24 @@ function build_static_resources() {
     }
   }
   $res_str .= $res['js']['prefix'] . 'window.Static_CMS_selectors = "' . $conf['selectors'] . '";' . $res['js']['suffix'];
-  return $res_str;
+  return '<div id="static-cms-res">' . $res_str . '</div>';
+}
+
+/**
+ * Save some HTML back to the file system.
+ *
+ * @param $path
+ *   The file to save.
+ * @param $content
+ *   The content to save it with.
+ *
+ * @return string
+ *   A status for the browser.
+ */
+function save_to_disk($path, $content) {
+  $path = $path == '/' ? 'index.html' : $path;
+  $content = str_replace('?static_page=', '', $content);
+  return file_put_contents('../' . $path, $content);
 }
 
 main();
